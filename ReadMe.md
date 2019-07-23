@@ -1,6 +1,6 @@
 # Topcoder - Lookups ES Processor
 
-## Dependencies
+## Dependencies 
 
 - Nodejs(v8+)
 - ElasticSearch
