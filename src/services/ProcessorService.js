@@ -52,7 +52,9 @@ processCreate.schema = {
     payload: Joi.object().keys({
       resource: Joi.string().required(),
       id: Joi.id(),
-      name: Joi.string().required()
+      name: Joi.string().required(),
+      countryFlag: Joi.string(),
+      countryCode: Joi.string()
     }).required()
   }).required()
 }
