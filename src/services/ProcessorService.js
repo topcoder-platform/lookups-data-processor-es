@@ -88,7 +88,21 @@ async function processUpdate (message) {
   }
 }
 
-processUpdate.schema = processCreate.schema
+processUpdate.schema = {
+  message: Joi.object().keys({
+    topic: Joi.string().required(),
+    originator: Joi.string().required(),
+    timestamp: Joi.date().required(),
+    'mime-type': Joi.string().required(),
+    payload: Joi.object().keys({
+      resource: Joi.string().required(),
+      id: Joi.id(),
+      name: Joi.string(),
+      countryFlag: Joi.string(),
+      countryCode: Joi.string()
+    }).required()
+  }).required()
+}
 
 /**
  * Process delete lookup entity message

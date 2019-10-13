@@ -5,8 +5,8 @@ module.exports = {
       stringFields: ['payload.id', 'payload.resource', 'payload.name']
     },
     Update: {
-      requiredFields: ['payload.id', 'payload.resource', 'payload.name'],
-      stringFields: ['payload.id', 'payload.resource', 'payload.name']
+      requiredFields: ['payload.id', 'payload.resource'],
+      stringFields: ['payload.id', 'payload.resource', 'payload.name', 'payload.countryFlag', 'payload.countryCode']
     },
     Delete: {
       requiredFields: ['payload.id', 'payload.resource'],
@@ -23,7 +23,9 @@ module.exports = {
         payload: {
           'id': '7d458700-bd2d-4b23-ab71-e79455844dba',
           'resource': 'country',
-          'name': 'US'
+          'name': 'US',
+          'countryCode': 'USA',
+          'countryFlag': 'USA-CountryFlag'
         }
       },
       {
@@ -47,7 +49,9 @@ module.exports = {
         payload: {
           'id': '7d458700-bd2d-4b23-ab71-e79455844dba',
           'resource': 'country',
-          'name': 'UK'
+          'name': 'UK',
+          'countryCode': 'UK',
+          'countryFlag': 'UK-Flag'
         }
       },
       {
@@ -69,7 +73,9 @@ module.exports = {
         payload: {
           'id': '7d458700-bd2d-4b23-ab71-e79455844dbb',
           'resource': 'country',
-          'name': 'China'
+          'name': 'China',
+          'countryFlag': 'China-flag',
+          'countryCode': 'China-code'
         }
       },
       {
