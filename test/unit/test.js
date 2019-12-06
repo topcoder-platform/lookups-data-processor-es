@@ -79,7 +79,6 @@ describe('Topcoder - Lookups ES Processor Unit Test', () => {
           }
         }
 
-        console.log('resource: ' + resource + ', op :' + op + ' , i:' + i)
         if (op === 'Update' && i >= 3) {
           // ensure document doesn't exist before update
           // when perform update operation later, it will create such document in ES
