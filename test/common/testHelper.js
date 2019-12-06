@@ -33,7 +33,21 @@ async function getEducationalInstitution (id) {
   })
 }
 
+/**
+ * Get device by id from ES.
+ * @param {String} id the device id
+ * @return {Object} the device entity
+ */
+async function getDevice (id) {
+  return client.getSource({
+    index: config.get('ES.DEVICE_INDEX'),
+    type: config.get('ES.DEVICE_TYPE'),
+    id
+  })
+}
+
 module.exports = {
   getCountry,
-  getEducationalInstitution
+  getEducationalInstitution,
+  getDevice
 }
