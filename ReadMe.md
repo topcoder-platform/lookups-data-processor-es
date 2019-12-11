@@ -30,6 +30,8 @@ The following parameters can be set in config files or in env variables:
 - ES.COUNTRY_TYPE: Elasticsearch index type for countries
 - ES.EDUCATIONAL_INSTITUTION_INDEX: Elasticsearch index name for educational institutions
 - ES.EDUCATIONAL_INSTITUTION_TYPE: Elasticsearch index type for educational institutions
+- ES.DEVICE_INDEX: Elasticsearch index name for devices
+- ES.DEVICE_TYPE: Elasticsearch index type for devices
 
 There is a `/health` endpoint that checks for the health of the app. This sets up an expressjs server and listens on the environment variable `PORT`. It's not part of the configuration file and needs to be passed as an environment variable
 
