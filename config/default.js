@@ -25,6 +25,8 @@ module.exports = {
     COUNTRY_INDEX: process.env.COUNTRY_INDEX || 'countries',
     COUNTRY_TYPE: process.env.COUNTRY_TYPE || '_doc',
     EDUCATIONAL_INSTITUTION_INDEX: process.env.EDUCATIONAL_INSTITUTION_INDEX || 'educational_institutions',
-    EDUCATIONAL_INSTITUTION_TYPE: process.env.EDUCATIONAL_INSTITUTION_TYPE || '_doc'
+    EDUCATIONAL_INSTITUTION_TYPE: process.env.EDUCATIONAL_INSTITUTION_TYPE || '_doc',
+    DEVICE_INDEX: process.env.DEVICE_INDEX || 'devices',
+    DEVICE_TYPE: process.env.DEVICE_TYPE || '_doc'
   }
 }

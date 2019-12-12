@@ -179,7 +179,7 @@ describe('Topcoder - Lookups ES Processor E2E Test', () => {
     for (let i = 0; i < testTopics[op].length; i++) {
       let resource = _.upperFirst(testTopics[op][i].payload.resource)
       it(`process ${_.lowerFirst(op)} ${resource} success`, async () => {
-        if (op === 'Delete' || (op === 'Update' && i <= 1)) {
+        if (op === 'Delete' || (op === 'Update' && i <= 2)) {
           // ensure document exist before delete or update
           try {
             await testHelper[`get${resource}`](testTopics[op][i].payload.id)
@@ -188,7 +188,7 @@ describe('Topcoder - Lookups ES Processor E2E Test', () => {
           }
         }
 
-        if (op === 'Update' && i >= 2) {
+        if (op === 'Update' && i >= 3) {
           // ensure document doesn't exist before update
           // when perform update operation later, it will create such document in ES
           try {
@@ -281,7 +281,7 @@ describe('Topcoder - Lookups ES Processor E2E Test', () => {
       await sendMessage(message)
       await waitJob()
 
-      should.equal(_.last(infoLogs), 'Ignore this message since resource is not in [country,educationalInstitution]')
+      should.equal(_.last(infoLogs), 'Ignore this message since resource is not in [country,educationalInstitution,device]')
     })
   }
 })

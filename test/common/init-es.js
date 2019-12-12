@@ -58,6 +58,14 @@ const init = async (isForce) => {
     logger.info(`The index ${config.ES.EDUCATIONAL_INSTITUTION_INDEX} will be created.`)
     await createESIndex(config.ES.EDUCATIONAL_INSTITUTION_INDEX)
   }
+
+  const dExists = await client.indices.exists({ index: config.ES.DEVICE_INDEX })
+  if (dExists) {
+    logger.info(`The index ${config.ES.DEVICE_INDEX} exists.`)
+  } else {
+    logger.info(`The index ${config.ES.DEVICE_INDEX} will be created.`)
+    await createESIndex(config.ES.DEVICE_INDEX)
+  }
 }
 
 /**
@@ -74,6 +82,13 @@ const clearES = async () => {
   logger.info(`Delete index ${config.ES.EDUCATIONAL_INSTITUTION_INDEX} if any.`)
   try {
     await client.indices.delete({ index: config.ES.EDUCATIONAL_INSTITUTION_INDEX })
+  } catch (err) {
+    // ignore
+  }
+
+  logger.info(`Delete index ${config.ES.DEVICE_INDEX} if any.`)
+  try {
+    await client.indices.delete({ index: config.ES.DEVICE_INDEX })
   } catch (err) {
     // ignore
   }

@@ -10,17 +10,19 @@ const logger = require('../common/logger')
 const helper = require('../common/helper')
 
 // valid resource
-const validResources = ['country', 'educationalInstitution']
+const validResources = ['country', 'educationalInstitution', 'device']
 
 const client = helper.getESClient()
 
 // ES index and type
 const index = {
   country: config.get('ES.COUNTRY_INDEX'),
+  device: config.get('ES.DEVICE_INDEX'),
   educationalInstitution: config.get('ES.EDUCATIONAL_INSTITUTION_INDEX')
 }
 const type = {
   country: config.get('ES.COUNTRY_TYPE'),
+  device: config.get('ES.DEVICE_TYPE'),
   educationalInstitution: config.get('ES.EDUCATIONAL_INSTITUTION_TYPE')
 }
 
@@ -51,11 +53,8 @@ processCreate.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       resource: Joi.string().required(),
-      id: Joi.id(),
-      name: Joi.string().required(),
-      countryFlag: Joi.string(),
-      countryCode: Joi.string()
-    }).required()
+      id: Joi.id()
+    }).required().unknown(true)
   }).required()
 }
 
@@ -96,11 +95,8 @@ processUpdate.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       resource: Joi.string().required(),
-      id: Joi.id(),
-      name: Joi.string(),
-      countryFlag: Joi.string(),
-      countryCode: Joi.string()
-    }).required()
+      id: Joi.id()
+    }).required().unknown(true)
   }).required()
 }
 
