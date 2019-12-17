@@ -38,8 +38,7 @@ function getESClient () {
       hosts,
       connectionClass: require('http-aws-es'), // eslint-disable-line global-require
       amazonES: {
-        region: config.ES.AWS_REGION,
-        credentials: new AWS.EnvironmentCredentials('AWS')
+        region: config.ES.AWS_REGION
       }
     })
   } else {
