@@ -33,6 +33,10 @@ function getESClient () {
   const apiVersion = config.ES.API_VERSION
   // AWS ES configuration is different from other providers
   if (/.*amazonaws.*/.test(hosts)) {
+    console.log("IF :: ")
+    console.log("apiVersion :: " + apiVersion)
+    console.log("hosts :: " + hosts)
+    console.log("region :: " + config.ES.AWS_REGION)
     esClient = elasticsearch.Client({
       apiVersion,
       hosts,
@@ -41,18 +45,14 @@ function getESClient () {
         region: config.ES.AWS_REGION
       }
     })
-    console.log("IF :: ")
+  } else {
+    console.log("ELSE :: ")
     console.log("apiVersion :: " + apiVersion)
     console.log("hosts :: " + hosts)
-    console.log("region :: " + config.ES.AWS_REGION)
-  } else {
     esClient = new elasticsearch.Client({
       apiVersion,
       hosts
     })
-    console.log("ELSE :: ")
-    console.log("apiVersion :: " + apiVersion)
-    console.log("hosts :: " + hosts)
   }
   return esClient
 }
