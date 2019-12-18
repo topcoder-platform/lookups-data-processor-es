@@ -25,7 +25,7 @@ function getKafkaOptions () {
  * Get ES Client
  * @return {Object} Elasticsearch Client Instance
  */
-function getESClient () {
+async function getESClient () {
   if (esClient) {
     return esClient
   }
@@ -42,7 +42,8 @@ function getESClient () {
       hosts,
       connectionClass: require('http-aws-es'), // eslint-disable-line global-require
       amazonES: {
-        region: config.ES.AWS_REGION
+        region: config.ES.AWS_REGION,
+        credentials: new AWS.EnvironmentCredentials('AWS')
       }
     })
   } else {

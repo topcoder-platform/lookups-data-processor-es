@@ -12,7 +12,9 @@ const helper = require('../common/helper')
 // valid resource
 const validResources = ['country', 'educationalInstitution', 'device']
 
-const client = helper.getESClient()
+const client = (async function() {
+  return await helper.getESClient()
+})();
 
 // ES index and type
 const index = {
@@ -31,6 +33,7 @@ const type = {
  * @param {Object} message the kafka message
  */
 async function processCreate (message) {
+  
   const resource = message.payload.resource
   if (_.includes(validResources, resource)) {
     await client.create({

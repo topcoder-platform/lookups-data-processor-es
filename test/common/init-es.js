@@ -11,7 +11,9 @@ const config = require('config')
 const logger = require('../../src/common/logger')
 const helper = require('../../src/common/helper')
 
-const client = helper.getESClient()
+const client = (async function() {
+  return await helper.getESClient()
+})();
 
 /**
  * Create Elasticsearch index
