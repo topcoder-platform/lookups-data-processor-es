@@ -31,25 +31,14 @@ async function getESClient () {
   }
   const hosts = config.ES.HOST
   const apiVersion = config.ES.API_VERSION
+
   // AWS ES configuration is different from other providers
   if (/.*amazonaws.*/.test(hosts)) {
-    console.log("IF :: ")
-    console.log("apiVersion :: " + apiVersion)
-    console.log("hosts :: " + hosts)
-    console.log("region :: " + config.ES.AWS_REGION)
-    esClient = elasticsearch.Client({
+    esClient = new elasticsearch.Client({
       apiVersion,
-      hosts,
-      connectionClass: require('http-aws-es'), // eslint-disable-line global-require
-      amazonES: {
-        region: config.ES.AWS_REGION,
-        credentials: new AWS.EnvironmentCredentials('AWS')
-      }
+      hosts
     })
   } else {
-    console.log("ELSE :: ")
-    console.log("apiVersion :: " + apiVersion)
-    console.log("hosts :: " + hosts)
     esClient = new elasticsearch.Client({
       apiVersion,
       hosts

@@ -5,8 +5,9 @@
 const config = require('config')
 const helper = require('../../src/common/helper')
 
-const client = (async function() {
-  return await helper.getESClient()
+var client
+(async function() {
+  client =  await helper.getESClient()
 })();
 
 /**
