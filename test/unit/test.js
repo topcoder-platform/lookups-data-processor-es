@@ -70,7 +70,7 @@ describe('Topcoder - Lookups ES Processor Unit Test', () => {
     for (let i = 0; i < testTopics[op].length; i++) {
       let resource = _.upperFirst(testTopics[op][i].payload.resource)
       it(`process ${_.lowerFirst(op)} ${resource} success`, async () => {
-        if (op === 'Delete' || (op === 'Update' && i <= 1)) {
+        if (op === 'Delete' || (op === 'Update' && i <= 2)) {
           // ensure document exist before delete or update
           try {
             await testHelper[`get${resource}`](testTopics[op][i].payload.id)
@@ -79,7 +79,7 @@ describe('Topcoder - Lookups ES Processor Unit Test', () => {
           }
         }
 
-        if (op === 'Update' && i >= 2) {
+        if (op === 'Update' && i >= 3) {
           // ensure document doesn't exist before update
           // when perform update operation later, it will create such document in ES
           try {
@@ -105,7 +105,6 @@ describe('Topcoder - Lookups ES Processor Unit Test', () => {
         } else {
           let ret = await testHelper[`get${resource}`](testTopics[op][i].payload.id)
           should.equal(ret.id, testTopics[op][i].payload.id)
-          should.equal(ret.name, testTopics[op][i].payload.name)
         }
       })
 
@@ -177,7 +176,7 @@ describe('Topcoder - Lookups ES Processor Unit Test', () => {
       let message = _.cloneDeep(testTopics[op][0])
       message.payload.resource = 'invalid'
       await service[`process${op}`](message)
-      should.equal(_.last(infoLogs), 'Ignore this message since resource is not in [country,educationalInstitution]')
+      should.equal(_.last(infoLogs), 'Ignore this message since resource is not in [country,educationalInstitution,device]')
     })
   }
 })

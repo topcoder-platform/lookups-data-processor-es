@@ -2,10 +2,10 @@
 FROM node:8.11.3
 
 # Copy the current directory into the Docker image
-COPY . /lookups-processor-es
+COPY . /lookups-data-processor-es
 
 # Set working directory for future use
-WORKDIR /lookups-processor-es
+WORKDIR /lookups-data-processor-es
 
 # Install the dependencies from package.json
 RUN npm install

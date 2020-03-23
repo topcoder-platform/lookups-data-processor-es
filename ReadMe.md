@@ -1,6 +1,6 @@
 # Topcoder - Lookups ES Processor
 
-## Dependencies
+## Dependencies 
 
 - Nodejs(v8+)
 - ElasticSearch
@@ -30,6 +30,8 @@ The following parameters can be set in config files or in env variables:
 - ES.COUNTRY_TYPE: Elasticsearch index type for countries
 - ES.EDUCATIONAL_INSTITUTION_INDEX: Elasticsearch index name for educational institutions
 - ES.EDUCATIONAL_INSTITUTION_TYPE: Elasticsearch index type for educational institutions
+- ES.DEVICE_INDEX: Elasticsearch index name for devices
+- ES.DEVICE_TYPE: Elasticsearch index type for devices
 
 There is a `/health` endpoint that checks for the health of the app. This sets up an expressjs server and listens on the environment variable `PORT`. It's not part of the configuration file and needs to be passed as an environment variable
 
@@ -64,7 +66,7 @@ Configuration for the tests is at `config/test.js`, only add such new configurat
 - run the producer and then write some message into the console to send to the `lookup.notification.create` topic:
   `bin/kafka-console-producer.sh --broker-list localhost:9092 --topic lookup.notification.create`
   in the console, write message, one message per line:
-  `{ "topic": "lookup.notification.create", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "7d458700-bd2d-4b23-ab71-e79455844dba", "resource": "country", "name": "US" } }`
+  `{"topic":"lookup.notification.create","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","name":"uu testing v","countryFlag":"https://www.google.com","countryCode":"TEST","id":"b596c276-e4ec-41a1-8894-50c4d42000d7"}}`
 - optionally, use another terminal, go to same directory, start a consumer to view the messages:
   `bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic lookup.notification.create --from-beginning`
 - writing/reading messages to/from other topics are similar
@@ -149,34 +151,76 @@ To run the Lookups ES Processor using docker, follow the below steps
 topic:
   `bin/kafka-console-producer.sh --broker-list localhost:9092 --topic lookup.notification.create`
 3. write message:
-  `{ "topic": "lookup.notification.create", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "7d458700-bd2d-4b23-ab71-e79455844dba", "resource": "country", "name": "US" } }`
+  `{"topic":"lookup.notification.create","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","name":"uu testing v","countryFlag":"https://www.google.com","countryCode":"TEST","id":"b596c276-e4ec-41a1-8894-50c4d42000d7"}}`
 4. Watch the app console, It will show message successfully handled.
-5. Run Command `npm run view-data country 7d458700-bd2d-4b23-ab71-e79455844dba` to verify the elastic data.
+5. Run Command `npm run view-data country b596c276-e4ec-41a1-8894-50c4d42000d7` to verify the elastic data.
+
 6. write message:
   `{ "topic": "lookup.notification.create", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "6605f779-b28b-428f-888b-e523b444f5ea", "resource": "educationalInstitution", "name": "MIT" } }`
 7. Watch the app console, It will show message successfully handled.
 8. Run Command `npm run view-data educationalInstitution 6605f779-b28b-428f-888b-e523b444f5ea` to verify the elastic data.
+
 9. Repeat step 3 again and you will see error message in app console indicate conflict error.
+
 10. start kafka-console-producer to write messages to `lookup.notification.update`
 topic:
   `bin/kafka-console-producer.sh --broker-list localhost:9092 --topic lookup.notification.update`
-11. write message:
-  `{ "topic": "lookup.notification.update", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "7d458700-bd2d-4b23-ab71-e79455844dba", "resource": "country", "name": "UK" } }`
+
+11. write message to update the country flag value only:
+  `{ "topic": "lookup.notification.update", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": {"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","name":"uu testing v","countryFlag":"update1","countryCode":"TEST"} }`
 12. Watch the app console, It will show message successfully handled.
 13. Repeat step 5 to verify elastic document has been updated
-14. write message:
-  `{ "topic": "lookup.notification.update", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "6605f779-b28b-428f-888b-e523b444f5ea", "resource": "educationalInstitution", "name": "LSE" } }`
+
+
+14. write message to update Country Code only :
+    `{"topic":"lookup.notification.update","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","name":"uu testing v","countryFlag":"update1","countryCode":"TEST-Update1"}}`
 15. Watch the app console, It will show message successfully handled.
-16. Repeat step 8 to verify elastic document has been updated
-17. start kafka-console-producer to write messages to `lookup.notification.delete`
+16. Repeat step 5 to verify elastic document has been updated
+
+17. write message to update country flag and country code :
+`{"topic":"lookup.notification.update","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","name":"uu testing v","countryFlag":"update2","countryCode":"TEST-Update2"}}`
+18. Watch the app console, It will show message successfully handled.
+19. Repeat step 5 to verify elastic document has been updated
+
+20. write message to update all country fields :
+`{"topic":"lookup.notification.update","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","name":"uu testing v-Update1","countryFlag":"update3","countryCode":"TEST-Update3"}}`
+21. Watch the app console, It will show message successfully handled.
+22. Repeat step 5 to verify elastic document has been updated
+
+23. write message to update Country Name only :
+`{"topic":"lookup.notification.update","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","name":"Another Update","countryFlag":"update3","countryCode":"TEST-Update3"}}`
+24. Watch the app console, It will show message successfully handled.
+25. Repeat step 5 to verify elastic document has been updated
+
+26. write message to patch the Country name :
+`{"topic":"lookup.notification.update","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","name":"The Patched Country Name"}}`
+27. Watch the app console, It will show message successfully handled.
+28. Repeat step 5 to verify elastic document has been updated
+
+29. write message to patch the country flag :
+`{"topic":"lookup.notification.update","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","countryFlag":"The patched Country Flag"}}`
+30. Watch the app console, It will show message successfully handled.
+31. Repeat step 5 to verify elastic document has been updated
+
+32. write message to patch the country code :
+`{"topic":"lookup.notification.update","originator":"lookups-api","timestamp":"2019-07-08T00:00:00.000Z","mime-type":"application/json","payload":{"resource":"country","id":"b596c276-e4ec-41a1-8894-50c4d42000d7","countryCode":"The patched Country Code"}}`
+33. Watch the app console, It will show message successfully handled.
+34. Repeat step 5 to verify elastic document has been updated
+
+
+35. write message:
+  `{ "topic": "lookup.notification.update", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "6605f779-b28b-428f-888b-e523b444f5ea", "resource": "educationalInstitution", "name": "LSE" } }`
+36. Watch the app console, It will show message successfully handled.
+37. Repeat step 8 to verify elastic document has been updated
+38. start kafka-console-producer to write messages to `lookup.notification.delete`
 topic:
   `bin/kafka-console-producer.sh --broker-list localhost:9092 --topic lookup.notification.delete`
-18. write message:
-  `{ "topic": "lookup.notification.delete", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "7d458700-bd2d-4b23-ab71-e79455844dba", "resource": "country" } }`
-19. Watch the app console, It will show message successfully handled.
-20. Repeat step 5 to verify elastic document has been deleted
-21. write message:
+39. write message:
+  `{ "topic": "lookup.notification.delete", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "b596c276-e4ec-41a1-8894-50c4d42000d7", "resource": "country" } }`
+40. Watch the app console, It will show message successfully handled.
+41. Repeat step 5 to verify elastic document has been deleted
+42. write message:
   `{ "topic": "lookup.notification.delete", "originator": "lookups-api", "timestamp": "2019-07-08T00:00:00.000Z", "mime-type": "application/json", "payload": { "id": "6605f779-b28b-428f-888b-e523b444f5ea", "resource": "educationalInstitution" } }`
-22. Watch the app console, It will show message successfully handled.
-23. Repeat step 8 to verify elastic document has been deleted
-24. Repeat step 18 and you will see error message in app console indicate not found error.
+43. Watch the app console, It will show message successfully handled.
+44. Repeat step 8 to verify elastic document has been deleted
+45. Repeat step 18 and you will see error message in app console indicate not found error.

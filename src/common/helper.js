@@ -25,22 +25,18 @@ function getKafkaOptions () {
  * Get ES Client
  * @return {Object} Elasticsearch Client Instance
  */
-function getESClient () {
+async function getESClient () {
   if (esClient) {
     return esClient
   }
   const hosts = config.ES.HOST
   const apiVersion = config.ES.API_VERSION
+
   // AWS ES configuration is different from other providers
   if (/.*amazonaws.*/.test(hosts)) {
-    esClient = elasticsearch.Client({
+    esClient = new elasticsearch.Client({
       apiVersion,
-      hosts,
-      connectionClass: require('http-aws-es'), // eslint-disable-line global-require
-      amazonES: {
-        region: config.ES.AWS_REGION,
-        credentials: new AWS.EnvironmentCredentials('AWS')
-      }
+      hosts
     })
   } else {
     esClient = new elasticsearch.Client({

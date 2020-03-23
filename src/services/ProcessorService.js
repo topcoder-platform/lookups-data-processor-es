@@ -10,17 +10,22 @@ const logger = require('../common/logger')
 const helper = require('../common/helper')
 
 // valid resource
-const validResources = ['country', 'educationalInstitution']
+const validResources = ['country', 'educationalInstitution', 'device']
 
-const client = helper.getESClient()
+var client
+(async function() {
+  client =  await helper.getESClient()
+})();
 
 // ES index and type
 const index = {
   country: config.get('ES.COUNTRY_INDEX'),
+  device: config.get('ES.DEVICE_INDEX'),
   educationalInstitution: config.get('ES.EDUCATIONAL_INSTITUTION_INDEX')
 }
 const type = {
   country: config.get('ES.COUNTRY_TYPE'),
+  device: config.get('ES.DEVICE_TYPE'),
   educationalInstitution: config.get('ES.EDUCATIONAL_INSTITUTION_TYPE')
 }
 
@@ -29,6 +34,7 @@ const type = {
  * @param {Object} message the kafka message
  */
 async function processCreate (message) {
+  
   const resource = message.payload.resource
   if (_.includes(validResources, resource)) {
     await client.create({
@@ -51,9 +57,8 @@ processCreate.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       resource: Joi.string().required(),
-      id: Joi.id(),
-      name: Joi.string().required()
-    }).required()
+      id: Joi.id()
+    }).required().unknown(true)
   }).required()
 }
 
@@ -86,7 +91,18 @@ async function processUpdate (message) {
   }
 }
 
-processUpdate.schema = processCreate.schema
+processUpdate.schema = {
+  message: Joi.object().keys({
+    topic: Joi.string().required(),
+    originator: Joi.string().required(),
+    timestamp: Joi.date().required(),
+    'mime-type': Joi.string().required(),
+    payload: Joi.object().keys({
+      resource: Joi.string().required(),
+      id: Joi.id()
+    }).required().unknown(true)
+  }).required()
+}
 
 /**
  * Process delete lookup entity message
