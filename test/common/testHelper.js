@@ -6,9 +6,9 @@ const config = require('config')
 const helper = require('../../src/common/helper')
 
 var client
-(async function() {
-  client =  await helper.getESClient()
-})();
+(async function () {
+  client = await helper.getESClient()
+})()
 
 /**
  * Get country by id from ES.

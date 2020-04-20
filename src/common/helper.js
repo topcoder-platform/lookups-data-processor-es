@@ -2,6 +2,7 @@
  * Contains generic helper methods
  */
 
+// eslint-disable-next-line
 const AWS = require('aws-sdk')
 const config = require('config')
 const elasticsearch = require('elasticsearch')

@@ -12,9 +12,9 @@ const logger = require('../../src/common/logger')
 const helper = require('../../src/common/helper')
 
 var client
-(async function() {
-  client =  await helper.getESClient()
-})();
+(async function () {
+  client = await helper.getESClient()
+})()
 
 /**
  * Create Elasticsearch index

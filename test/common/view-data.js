@@ -12,9 +12,9 @@ const helper = require('../../src/common/helper')
 const validResources = ['country', 'educationalInstitution']
 
 var client
-(async function() {
-  client =  await helper.getESClient()
-})();
+(async function () {
+  client = await helper.getESClient()
+})()
 
 // ES index and type
 const index = {

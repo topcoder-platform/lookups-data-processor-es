@@ -13,9 +13,9 @@ const helper = require('../common/helper')
 const validResources = ['country', 'educationalInstitution', 'device']
 
 var client
-(async function() {
-  client =  await helper.getESClient()
-})();
+(async function () {
+  client = await helper.getESClient()
+})()
 
 // ES index and type
 const index = {
@@ -34,7 +34,6 @@ const type = {
  * @param {Object} message the kafka message
  */
 async function processCreate (message) {
-  
   const resource = message.payload.resource
   if (_.includes(validResources, resource)) {
     await client.create({
@@ -111,12 +110,18 @@ processUpdate.schema = {
 async function processDelete (message) {
   const resource = message.payload.resource
   if (_.includes(validResources, resource)) {
-    await client.delete({
-      index: index[resource],
-      type: type[resource],
-      id: message.payload.id,
-      refresh: 'true'
-    })
+    if (message.payload.isSoftDelete) {
+      delete message.payload.isSoftDelete
+      message.payload.isDeleted = true
+      await processUpdate(message)
+    } else {
+      await client.delete({
+        index: index[resource],
+        type: type[resource],
+        id: message.payload.id,
+        refresh: 'true'
+      })
+    }
   } else {
     logger.info(`Ignore this message since resource is not in [${validResources}]`)
   }
@@ -130,7 +135,8 @@ processDelete.schema = {
     'mime-type': Joi.string().required(),
     payload: Joi.object().keys({
       resource: Joi.string().required(),
-      id: Joi.id()
+      id: Joi.id(),
+      isSoftDelete: Joi.boolean()
     }).required()
   }).required()
 }
