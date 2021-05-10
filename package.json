@@ -31,7 +31,7 @@
     "elasticsearch": "^16.1.1",
     "get-parameter-names": "^0.3.0",
     "http-status-codes": "^1.3.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "no-kafka": "^3.4.3",
     "topcoder-healthcheck-dropin": "^1.0.3",
     "winston": "^3.2.1",
